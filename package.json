@@ -4,7 +4,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "vercel-build": "echo 'No build step required.'"
+    "vercel-build": "echo 'No build step required.'",
+    "postinstall": "npm rebuild bcrypt --build-from-source"
   },
   "dependencies": {
     "@types/express": "^5.0.0",
