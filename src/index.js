@@ -33,11 +33,16 @@ mongoose.set("strictQuery", true);
 // Conexão com MongoDB
 (async () => {
   try {
-    await mongoose.connect(MONGO_URI);  // Removido useNewUrlParser e useUnifiedTopology
+    await mongoose.connect(MONGO_URI, {
+      useNewUrlParser: true, // Configuração para parse de URL
+      useUnifiedTopology: true, // Para uma melhor performance com a nova topologia do MongoDB
+      retryWrites: true, // Recomendado para maior confiabilidade
+      w: 'majority', // Para garantir que a escrita seja confirmada por maioria dos nós no cluster
+    });
     console.log("✅ Conectado ao MongoDB");
   } catch (err) {
     console.error("❌ Erro ao conectar ao MongoDB:", err.message);
-    process.exit(1);
+    process.exit(1); // Caso a conexão falhe, encerra o processo
   }
 })();
 
