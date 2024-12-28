@@ -9,9 +9,10 @@ const likeRoutes = require("./routes/likeRoutes");
 // Carregar variáveis de ambiente
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
+// Desestruturar as variáveis de ambiente
 const { MONGO_URI, PORT } = process.env;
 
-// Validação das variáveis de ambiente
+// Validar as variáveis de ambiente
 if (!MONGO_URI || !PORT) {
   console.error("❌ Variáveis de ambiente ausentes. Verifique o arquivo .env.");
   process.exit(1);
@@ -19,32 +20,27 @@ if (!MONGO_URI || !PORT) {
 
 // Configuração do Express
 const app = express();
+
+// Middleware
 app.use(cors());
-app.use(express.json({ limit: "50mb" })); // Aumentando o limite para JSON
-app.use(express.urlencoded({ limit: "50mb", extended: true })); // Para dados de formulário
+app.use(express.json({ limit: "50mb" })); // Aumentar o limite de JSON
+app.use(express.urlencoded({ limit: "50mb", extended: true })); // Para dados de formulários
 
-// Rotas de comentários e curtidas 
-app.use("/api/comments", commentRoutes);
-app.use("/api/events", likeRoutes);
-
-// Configuração do Mongoose
-mongoose.set("strictQuery", true);
-
-// Conexão com MongoDB
-(async () => {
+// Conectar ao MongoDB
+const connectMongoDB = async () => {
   try {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(MONGO_URI);
     console.log("✅ Conectado ao MongoDB");
   } catch (err) {
     console.error("❌ Erro ao conectar ao MongoDB:", err.message);
     process.exit(1);
   }
-})();
+};
 
-// Registrar outras rotas
+// Conectar ao banco de dados
+connectMongoDB();
+
+// Registrar as rotas (sem alteração na estrutura original)
 const registerRoutes = () => {
   try {
     const authRoutes = require("./routes/authRoutes");
@@ -59,6 +55,10 @@ const registerRoutes = () => {
     app.use("/api/orders", orderRoutes);
     app.use("/api/events", eventRoutes);
     app.use("/api/categories", categoryRoutes);
+
+    // Rotas de comentários e curtidas
+    app.use("/api/comments", commentRoutes);
+    app.use("/api/likes", likeRoutes);
   } catch (err) {
     console.error("❌ Erro ao registrar rotas:", err.message);
     process.exit(1);
