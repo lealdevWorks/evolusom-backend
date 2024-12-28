@@ -20,31 +20,24 @@ if (!MONGO_URI || !PORT) {
 // Configuração do Express
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: "50mb" })); // Aumentando o limite para JSON
-app.use(express.urlencoded({ limit: "50mb", extended: true })); // Para dados de formulário
-
-// Rotas de comentários e curtidas
-app.use("/api/comments", commentRoutes);
-app.use("/api/events", likeRoutes);
-
-// Configuração do Mongoose
-mongoose.set("strictQuery", true);
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Conexão com MongoDB
+mongoose.set("strictQuery", true);
 (async () => {
   try {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true, // Configuração para parse de URL
-      useUnifiedTopology: true, // Para uma melhor performance com a nova topologia do MongoDB
-      retryWrites: true, // Recomendado para maior confiabilidade
-      w: 'majority', // Para garantir que a escrita seja confirmada por maioria dos nós no cluster
-    });
+    await mongoose.connect(MONGO_URI);
     console.log("✅ Conectado ao MongoDB");
   } catch (err) {
     console.error("❌ Erro ao conectar ao MongoDB:", err.message);
-    process.exit(1); // Caso a conexão falhe, encerra o processo
+    process.exit(1);
   }
 })();
+
+// Rotas
+app.use("/api/comments", commentRoutes);
+app.use("/api/events", likeRoutes);
 
 // Registrar outras rotas
 const registerRoutes = () => {
