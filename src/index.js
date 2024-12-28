@@ -33,8 +33,10 @@ mongoose.set("strictQuery", true);
 // Conexão com MongoDB
 (async () => {
   try {
-    // Conexão sem as opções obsoletas
-    await mongoose.connect(MONGO_URI);
+    await mongoose.connect(MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("✅ Conectado ao MongoDB");
   } catch (err) {
     console.error("❌ Erro ao conectar ao MongoDB:", err.message);
@@ -79,6 +81,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Erro interno do servidor." });
 });
 
-app.listen(PORT || 5000, () => {
+// Iniciar o servidor
+app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
