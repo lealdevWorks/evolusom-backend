@@ -33,10 +33,8 @@ mongoose.set("strictQuery", true);
 // Conexão com MongoDB
 (async () => {
   try {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    // Conexão sem as opções obsoletas
+    await mongoose.connect(MONGO_URI);
     console.log("✅ Conectado ao MongoDB");
   } catch (err) {
     console.error("❌ Erro ao conectar ao MongoDB:", err.message);
