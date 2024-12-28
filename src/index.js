@@ -79,7 +79,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Erro interno do servidor." });
 });
 
-// Iniciar o servidor
-app.listen(PORT, () => {
+app.listen(PORT || 5000, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
