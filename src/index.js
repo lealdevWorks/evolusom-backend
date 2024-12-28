@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" })); // Aumentando o limite para JSON
 app.use(express.urlencoded({ limit: "50mb", extended: true })); // Para dados de formulário
 
-// Rotas de comentários e curtidas 
+// Rotas de comentários e curtidas
 app.use("/api/comments", commentRoutes);
 app.use("/api/events", likeRoutes);
 
@@ -33,10 +33,7 @@ mongoose.set("strictQuery", true);
 // Conexão com MongoDB
 (async () => {
   try {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(MONGO_URI);  // Removido useNewUrlParser e useUnifiedTopology
     console.log("✅ Conectado ao MongoDB");
   } catch (err) {
     console.error("❌ Erro ao conectar ao MongoDB:", err.message);
